@@ -9,6 +9,7 @@ function App() {
   const [totalNotes, setTotalNotes] = useState([]);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
+  const [editingTitle, setEditingTitle] = useState("");
 
   const getNoteTitle = (e) => {
     setNoteTitle(e.target.value);
@@ -23,17 +24,15 @@ function App() {
     setNoteContent("");
   };
 
-  const addnote = (e) => {
+  const addnote = () => {
     if (noteContent && noteTitle !== "") {
-      const newNote = (
-        <Notes
-          title={noteTitle}
-          content={noteContent}
-          key={uuidv4()}
-          deleteOnClick={() => deletenote(newNote.key)}
-        />
-      );
+      const newNote = {
+        title: noteTitle,
+        content: noteContent,
+        key: uuidv4(),
+      };
       setTotalNotes([...totalNotes, newNote]);
+      resetAddValues();
     }
   };
 
@@ -51,7 +50,15 @@ function App() {
           addContent={getNoteContent}
           onSubmit={resetAddValues}
         />
-        {totalNotes}
+        {totalNotes.map((note) => (
+          <Notes
+            key={note.key}
+            title={note.title}
+            content={note.content}
+            deleteOnClick={() => deletenote(note.key)}
+            edit={() => editNote}
+          />
+        ))}
       </div>
     </>
   );
