@@ -95,4 +95,5 @@
 .editTitle:focus,
 .editContent:focus {
     outline: none;
+    user-select: all;
 }
