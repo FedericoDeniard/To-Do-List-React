@@ -1,5 +1,6 @@
 import "./index.css";
 import editSVG from "./images/edit.svg";
+import saveSVG from "./images/save.svg";
 import deleteSVG from "./images/delete.svg";
 import Checkbox from "../checkbox";
 
@@ -58,7 +59,11 @@ function Notes({ title, content, deleteOnClick }) {
           <Checkbox checked={isChecked} onChange={handleCheckboxChange} />
         </a>
         <a className="btn" href="#">
-          <img className="svg-icon" src={editSVG} onClick={editFunction} />
+          <img
+            className="svg-icon"
+            src={editNote === true ? saveSVG : editSVG}
+            onClick={editFunction}
+          />
         </a>
         <a className="btn" href="#" onClick={deleteOnClick}>
           <img className="svg-icon" src={deleteSVG} />
