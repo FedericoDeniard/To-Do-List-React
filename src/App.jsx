@@ -1,14 +1,20 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import { v4 as uuidv4 } from "uuid";
 
-import Notes from "./components/notes";
+import Note from "./components/notes";
 import AddNoteInput from "./components/addNote";
 
 function App() {
   const [totalNotes, setTotalNotes] = useState([]);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
+
+  useEffect(() => {
+    const storedNotes = JSON.parse(localStorage.getItem("notes")) || [];
+    setTotalNotes(storedNotes);
+  }, []);
 
   const getNoteTitle = (e) => {
     setNoteTitle(e.target.value);
@@ -32,11 +38,14 @@ function App() {
       };
       setTotalNotes([...totalNotes, newNote]);
       resetAddValues();
+      localStorage.setItem("notes", JSON.stringify([...totalNotes, newNote]));
     }
   };
 
   const deletenote = (key) => {
     setTotalNotes((prevNotes) => prevNotes.filter((note) => note.key !== key));
+    const updatedNotes = totalNotes.filter((note) => note.key !== key);
+    localStorage.setItem("notes", JSON.stringify(updatedNotes));
   };
 
   return (
@@ -50,7 +59,7 @@ function App() {
           onSubmit={resetAddValues}
         />
         {totalNotes.map((note) => (
-          <Notes
+          <Note
             key={note.key}
             title={note.title}
             content={note.content}

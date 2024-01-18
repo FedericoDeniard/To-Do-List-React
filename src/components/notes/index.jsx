@@ -4,20 +4,23 @@ import saveSVG from "./images/save.svg";
 import deleteSVG from "./images/delete.svg";
 import Checkbox from "../checkbox";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function Notes({ title, content, deleteOnClick }) {
+function Note({ title, content, deleteOnClick }) {
+  const storageKey = `storageChecked_${title}`;
   const [isChecked, setChecked] = useState(false);
   const [editNote, changeEditNote] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+
   const handleCheckboxChange = () => {
-    setChecked(!isChecked);
-    console.log(isChecked);
+    const newChecked = !isChecked;
+    setChecked(newChecked);
+    localStorage.setItem(storageKey, newChecked.toString());
   };
+
   const editFunction = () => {
     changeEditNote(!editNote);
-    console.log(editNote);
   };
 
   const settingNewTitle = (e) => {
@@ -28,6 +31,13 @@ function Notes({ title, content, deleteOnClick }) {
     setNewContent(e.target.value);
   };
 
+  useEffect(() => {
+    const storedChecked = localStorage.getItem(storageKey);
+    if (storedChecked !== null) {
+      setChecked(storedChecked === "true");
+    }
+  }, [storageKey]);
+
   return (
     <div className="card">
       <div className={`text ${isChecked ? "checked" : ""}`}>
@@ -36,8 +46,9 @@ function Notes({ title, content, deleteOnClick }) {
             placeholder="New Title"
             className="editTitle text"
             type="text"
+            value={newTitle}
             onChange={settingNewTitle}
-          ></input>
+          />
         ) : (
           <span>{newTitle === "" ? title : newTitle}</span>
         )}
@@ -46,8 +57,9 @@ function Notes({ title, content, deleteOnClick }) {
             placeholder="New content"
             className="editContent subtitle"
             type="text"
+            value={newContent}
             onChange={settingNewContent}
-          ></input>
+          />
         ) : (
           <p className={`subtitle ${isChecked ? "checked" : ""}`}>
             {newContent === "" ? content : newContent}
@@ -63,13 +75,15 @@ function Notes({ title, content, deleteOnClick }) {
             className="svg-icon"
             src={editNote === true ? saveSVG : editSVG}
             onClick={editFunction}
+            alt={editNote === true ? "Save" : "Edit"}
           />
         </a>
         <a className="btn" href="#" onClick={deleteOnClick}>
-          <img className="svg-icon" src={deleteSVG} />
+          <img className="svg-icon" src={deleteSVG} alt="Delete" />
         </a>
       </div>
     </div>
   );
 }
-export default Notes;
+
+export default Note;
