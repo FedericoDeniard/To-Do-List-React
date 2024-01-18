@@ -9,7 +9,6 @@ function App() {
   const [totalNotes, setTotalNotes] = useState([]);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteContent, setNoteContent] = useState("");
-  const [editingTitle, setEditingTitle] = useState("");
 
   const getNoteTitle = (e) => {
     setNoteTitle(e.target.value);
